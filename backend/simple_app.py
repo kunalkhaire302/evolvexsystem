@@ -10,13 +10,12 @@ from pymongo import MongoClient
 import bcrypt
 from datetime import timedelta
 import os
-from werkzeug.utils import secure_filename
-from werkzeug.utils import secure_filename
-from flask import send_from_directory
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 
 # Load environment variables
 load_dotenv()
+from flask import send_from_directory
 
 # Create Flask app
 app = Flask(__name__, static_folder='../frontend', static_url_path='')
@@ -45,7 +44,7 @@ app.json_encoder = MongoJSONEncoder
 
 # Connect to MongoDB
 try:
-    mongo_uri = os.getenv('mongodb+srv://kunalkhaire177_db_user:<db_password>@cluster0.7keyczh.mongodb.net/?appName=Cluster0', 'mongodb://localhost:27017/the_system')
+    mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/the_system')
     client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['the_system']

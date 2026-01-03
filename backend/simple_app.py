@@ -277,7 +277,8 @@ def upload_profile_image():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
             
             # Update DB
-            image_url = f"http://127.0.0.1:5000/uploads/profiles/{unique_filename}"
+            base_url = request.host_url.rstrip('/')
+            image_url = f"{base_url}/uploads/profiles/{unique_filename}"
             db.users.update_one({'_id': ObjectId(user_id)}, {'$set': {'profile_image': image_url}})
             
             return jsonify({'message': 'Image uploaded successfully', 'image_url': image_url}), 200

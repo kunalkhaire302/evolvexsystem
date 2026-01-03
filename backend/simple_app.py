@@ -50,7 +50,13 @@ try:
     db = client['the_system']
     print("✅ MongoDB Connected!")
 except Exception as e:
-    print(f"❌ MongoDB Error: {e}")
+except Exception as e:
+    print(f"❌ MongoDB Connection Error: {e}")
+    # Check for common errors
+    if "bad auth" in str(e).lower():
+         print("⚠️  Authentication failed. Did you replace <db_password> in .env?")
+    if "nodename nor servname" in str(e).lower():
+         print("⚠️  DNS error. Check your internet connection or the MONGO_URI string.")
     db = None
 
 # Serve Frontend - Root Route
@@ -82,6 +88,9 @@ def register():
         
         if not username or not email or not password:
             return jsonify({'error': 'Missing fields'}), 400
+            
+        if db is None:
+            return jsonify({'error': 'Database not connected. Check server logs for details.'}), 500
         
         # Check if user exists
         if db.users.find_one({'$or': [{'username': username}, {'email': email}]}):
@@ -142,6 +151,9 @@ def login():
         
         if not username or not password:
             return jsonify({'error': 'Missing credentials'}), 400
+            
+        if db is None:
+            return jsonify({'error': 'Database not connected. Check server logs.'}), 500
         
         # Find user
         user = db.users.find_one({'username': username})

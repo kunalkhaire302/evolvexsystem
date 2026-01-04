@@ -10,15 +10,51 @@ from pymongo import MongoClient
 import bcrypt
 from datetime import timedelta
 import os
+import sys
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
-# Load environment variables
-load_dotenv()
+# Detect if running as PyInstaller bundle
+def get_base_path():
+    """Get the base path for the application (works for both dev and bundled exe)"""
+    if getattr(sys, 'frozen', False):
+        # Running as compiled executable
+        return sys._MEIPASS
+    else:
+        # Running in normal Python environment
+        return os.path.dirname(os.path.abspath(__file__))
+
+BASE_PATH = get_base_path()
+
+# Load environment variables from multiple possible locations
+env_locations = [
+    os.path.join(os.path.dirname(sys.executable), '.env') if getattr(sys, 'frozen', False) else None,
+    os.path.join(BASE_PATH, '.env'),
+    os.path.join(BASE_PATH, '..', '.env'),
+    '.env'
+]
+for env_path in env_locations:
+    if env_path and os.path.exists(env_path):
+        load_dotenv(env_path)
+        print(f"✅ Loaded .env from: {env_path}")
+        break
+else:
+    load_dotenv()  # Try default locations
+
 from flask import send_from_directory
 
+# Determine frontend folder path
+if getattr(sys, 'frozen', False):
+    # Running as exe - frontend is in _MEIPASS/frontend
+    FRONTEND_FOLDER = os.path.join(BASE_PATH, 'frontend')
+else:
+    # Running as script - frontend is in ../frontend
+    FRONTEND_FOLDER = os.path.join(BASE_PATH, '..', 'frontend')
+
+print(f"📂 Frontend folder: {FRONTEND_FOLDER}")
+
 # Create Flask app
-app = Flask(__name__, static_folder='../frontend', static_url_path='')
+app = Flask(__name__, static_folder=FRONTEND_FOLDER, static_url_path='')
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['JWT_SECRET_KEY'] = 'your-jwt-secret-key'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
@@ -43,13 +79,21 @@ app.json_encoder = MongoJSONEncoder
 
 
 # Connect to MongoDB
+# Default URI with actual credentials (used if .env has placeholders)
+DEFAULT_MONGO_URI = 'mongodb+srv://kunalkhaire177_db_user:Sj2LigG8XfQvbcF2@cluster0.7keyczh.mongodb.net/the_system?retryWrites=true&w=majority&appName=Cluster0'
+
 try:
-    mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/the_system')
+    mongo_uri = os.getenv('MONGO_URI', DEFAULT_MONGO_URI)
+    
+    # If .env has placeholder password, use the hardcoded default
+    if '<db_password>' in mongo_uri or '<password>' in mongo_uri:
+        print("⚠️  .env has placeholder password, using default credentials...")
+        mongo_uri = DEFAULT_MONGO_URI
+    
     client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
     client.server_info()
     db = client['the_system']
     print("✅ MongoDB Connected!")
-except Exception as e:
 except Exception as e:
     print(f"❌ MongoDB Connection Error: {e}")
     # Check for common errors

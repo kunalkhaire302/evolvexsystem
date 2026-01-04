@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVOLVEX SYSTEM - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing-layout.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="landing-page">
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="grid-overlay"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="landing-container">
+        <!-- Logo and Title -->
+        <div class="landing-header">
+            <div class="logo-container">
+                <img src="assets/evolvex-logo.png" alt="EVOLVEX SYSTEM" class="main-logo"
+                    style="max-width: 500px; height: auto; margin-bottom: 1rem;">
+            </div>
+            <p class="subtitle">AI-Driven Adaptive Leveling Platform</p>
+            <p class="tagline">Level up your life by completing real-world quests</p>
+        </div>
+
+        <!-- Auth Forms Container -->
+        <div class="auth-container">
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginForm">
+                <h2 class="form-title">Welcome Back</h2>
+                <p class="form-subtitle">Login to continue your journey</p>
+
+                <form id="loginFormElement">
+                    <div class="input-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" name="username" required
+                            placeholder="Enter your username">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required
+                            placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Login</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+
+                <p class="form-switch">
+                    Don't have an account?
+                    <a href="#" id="showRegister">Register here</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm">
+                <h2 class="form-title">Join EVOLVEX</h2>
+                <p class="form-subtitle">Create your account and start leveling up</p>
+
+                <form id="registerFormElement">
+                    <div class="input-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" name="username" required
+                            placeholder="Choose a username">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" name="email" required placeholder="Enter your email">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" name="password" required
+                            placeholder="Create a password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Create Account</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+
+                <p class="form-switch">
+                    Already have an account?
+                    <a href="#" id="showLogin">Login here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div class="message-container" id="messageContainer"></div>
+
+        <!-- Features Section -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Real-Time Stats</h3>
+                <p>Track your Strength, Agility, Intelligence, and Stamina</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Adaptive Quests</h3>
+                <p>AI-powered quest system that adapts to your level</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚔️</div>
+                <h3>Skill Progression</h3>
+                <p>Unlock and level up powerful skills</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Achievements</h3>
+                <p>Earn titles and permanent stat bonuses</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

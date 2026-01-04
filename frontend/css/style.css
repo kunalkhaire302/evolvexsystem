@@ -1708,75 +1708,302 @@ body.dashboard-page {
 
     /* === STATUS PANEL REFINEMENT === */
     .level-section {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 1.2rem;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 240, 255, 0.05);
-        margin-bottom: 1.5rem;
+        background: radial-gradient(circle at center, rgba(0, 240, 255, 0.1), rgba(0, 0, 0, 0.4));
+        padding: 1.5rem;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        margin-bottom: 2rem;
         text-align: center;
+        box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .level-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 60%);
+        animation: rotateGlow 10s linear infinite;
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+    @keyframes rotateGlow {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .level-display {
         flex-direction: column;
         align-items: center;
-        gap: 0.2rem;
-        margin-bottom: 1rem;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+        position: relative;
+        z-index: 1;
     }
 
     .level-label {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        font-weight: 600;
-        letter-spacing: 2px;
+        font-size: 0.8rem;
+        color: var(--primary-cyan);
+        font-weight: 800;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        opacity: 0.8;
     }
 
     .level-value {
-        font-size: 4rem;
-        line-height: 1;
-        background: linear-gradient(to bottom, #fff, var(--primary-cyan));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 10px var(--primary-glow));
+        font-size: 5rem;
+        line-height: 0.9;
+        font-weight: 900;
+        color: #fff;
+        text-shadow:
+            0 0 10px var(--primary-cyan),
+            0 0 20px var(--primary-cyan),
+            0 0 40px var(--primary-glow);
+        margin: 0.5rem 0;
+        animation: pulseLevel 3s ease-in-out infinite;
     }
 
+    @keyframes pulseLevel {
+
+        0%,
+        100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 15px var(--primary-cyan));
+        }
+
+        50% {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 25px var(--primary-cyan-bright));
+        }
+    }
+
+    /* Progress Bars - Enhanced */
+    .exp-bar-container,
+    .health-section {
+        position: relative;
+        z-index: 1;
+    }
+
+    .exp-bar,
+    .health-bar {
+        height: 12px;
+        /* Thicker for visibility */
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+    }
+
+    .exp-fill {
+        box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .health-fill {
+        box-shadow: 0 0 10px var(--danger-glow);
+    }
+
+    .exp-label,
+    .health-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.4rem;
+    }
+
+    /* Stats Grid - Glassy Cards */
     .stats-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
     }
 
     .stat-item {
-        padding: 0.8rem;
+        padding: 1rem;
         background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        transition: transform 0.2s, background 0.2s;
+    }
+
+    .stat-item:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.08);
     }
 
     .stat-icon {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
+        filter: drop-shadow(0 0 5px var(--primary-glow));
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        letter-spacing: 1px;
     }
 
     .stat-value {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
+        color: #fff;
+        font-weight: 700;
+        text-shadow: 0 0 5px var(--primary-glow);
     }
 
-    /* === QUESTS & SKILLS === */
-    .quest-card,
-    .skill-card {
+    /* === QUESTS PANEL PERFECTED === */
+    .quest-card {
         padding: 1.2rem;
-        border-radius: 12px;
-        background: rgba(0, 0, 0, 0.4);
-        margin-bottom: 0.5rem;
+        border-radius: 14px;
+        margin-bottom: 1rem;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(10, 10, 20, 0.8) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-left: 4px solid var(--text-muted);
+        /* Default border */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
     }
+
+    /* Dynamic Borders based on difficulty (JS normally handles classes, but assuming difficulty classes exist or applied nicely) */
+    /* Since we only have .quest-card, we'll style generous defaults and assume inner HTML handles explicit difficulty styling if available. 
+       Actually, existing CSS has .difficulty-easy etc inside. We'll use those to style the card border if possible or just style the pill. */
 
     .quest-header {
-        flex-direction: column;
+        flex-direction: row;
+        /* Keep row but wrap if needed */
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
         gap: 0.5rem;
-        align-items: flex-start;
+        margin-bottom: 0.8rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 0.5rem;
+    }
+
+    .quest-title {
+        font-size: 1.1rem;
+        margin: 0;
+        width: 100%;
     }
 
     .quest-difficulty {
-        align-self: flex-start;
         font-size: 0.7rem;
-        padding: 0.3rem 0.8rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .quest-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .quest-rewards {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .reward-item {
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+    }
+
+    /* === SKILLS PANEL PERFECTED === */
+    .tabs {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0.4rem;
+        border-radius: 10px;
+        gap: 0.5rem;
+    }
+
+    .tab-btn {
+        border-radius: 8px;
+        font-size: 0.8rem;
+        padding: 0.8rem;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tab-btn.active {
+        background: var(--shadow-purple);
+        color: #fff;
+        box-shadow: 0 0 15px var(--purple-glow);
+    }
+
+    .skills-container {
+        gap: 0.8rem;
+        margin-top: 1rem;
+    }
+
+    .skill-card {
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+        align-items: center;
+        background: linear-gradient(135deg, rgba(20, 20, 30, 0.9), rgba(10, 10, 20, 0.95));
+        border: 1px solid rgba(107, 0, 255, 0.15);
+        border-radius: 12px;
+    }
+
+    .skill-header {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+    }
+
+    .skill-name {
+        font-size: 1rem;
+        color: #fff;
+    }
+
+    .skill-type {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .skill-description {
+        grid-column: 1 / -1;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.4rem;
+        line-height: 1.4;
+    }
+
+    .skill-level {
+        grid-column: 1 / -1;
+        font-size: 0.7rem;
+        color: var(--shadow-purple-bright);
+        text-align: right;
+        font-family: var(--font-system);
     }
 }
 

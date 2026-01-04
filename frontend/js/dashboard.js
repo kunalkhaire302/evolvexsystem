@@ -721,9 +721,9 @@ function initDungeonSystem() {
     // Enter Dungeon Button (Handled via onclick in HTML)
     // document.getElementById('enterDungeonBtn')?.addEventListener('click', startDungeon);
 
-    // Dungeon Controls
-    document.getElementById('attackBossBtn')?.addEventListener('click', strikeBoss);
-    document.getElementById('fleeDungeonBtn')?.addEventListener('click', fleeDungeon);
+    // Dungeon Controls (Handled via onclick)
+    // document.getElementById('attackBossBtn')?.addEventListener('click', strikeBoss);
+    // document.getElementById('fleeDungeonBtn')?.addEventListener('click', fleeDungeon);
 }
 
 // Global scope for select function

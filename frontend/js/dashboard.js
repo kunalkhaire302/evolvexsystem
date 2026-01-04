@@ -870,3 +870,58 @@ async function fleeDungeon() {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initDungeonSystem, 1000); // Delay slightly to ensure header exists
 });
+
+/* === BACKGROUND MUSIC SYSTEM === */
+let isBgmPlaying = false;
+let hasInteracted = false;
+
+function initBGM() {
+    const bgmPlayer = document.getElementById('bgmPlayer');
+    const toggleBtn = document.getElementById('bgmToggleBtn');
+    const volumeSlider = document.getElementById('bgmVolumeSlider');
+
+    if (!bgmPlayer || !toggleBtn) return;
+
+    // Set initial volume
+    bgmPlayer.volume = 0.3;
+
+    // Toggle Play/Pause
+    toggleBtn.addEventListener('click', () => {
+        if (bgmPlayer.paused) {
+            bgmPlayer.play().then(() => {
+                isBgmPlaying = true;
+                toggleBtn.classList.add('bgm-playing');
+                volumeSlider.classList.remove('hidden');
+                showToast("🎵 Music Started", "info");
+            }).catch(e => console.log("Audio play failed:", e));
+        } else {
+            bgmPlayer.pause();
+            isBgmPlaying = false;
+            toggleBtn.classList.remove('bgm-playing');
+            volumeSlider.classList.add('hidden');
+            showToast("⏸️ Music Paused", "info");
+        }
+    });
+
+    // Volume Control
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', (e) => {
+            bgmPlayer.volume = e.target.value;
+        });
+    }
+
+    // Auto-start on first interaction
+    document.addEventListener('click', () => {
+        if (!hasInteracted && bgmPlayer.paused && !isBgmPlaying) {
+            bgmPlayer.play().then(() => {
+                isBgmPlaying = true;
+                toggleBtn.classList.add('bgm-playing');
+                volumeSlider.classList.remove('hidden');
+                hasInteracted = true;
+            }).catch(() => { });
+        }
+    }, { once: true });
+}
+
+// Call initBGM on load
+document.addEventListener('DOMContentLoaded', initBGM);

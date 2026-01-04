@@ -22,11 +22,20 @@
     <!-- Header -->
     <header class="dashboard-header">
         <div class="header-left">
-            <h1
-                style="font-family: 'Lobster', cursive; font-size: 2rem; background: linear-gradient(135deg, #00d9ff, #7000ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.3)); letter-spacing: 1px; font-weight: 400;">
-                EVOLVEX SYSTEM</h1>
+            <div class="logo">
+                <span class="logo-icon">💠</span>
+                <span class="logo-text">EVOLVEX</span>
+            </div>
+            <nav class="nav-links">
+                <button class="nav-btn active" data-tab="dashboard">DASHBOARD</button>
+                <button class="nav-btn" data-tab="quests">QUESTS</button>
+                <button class="nav-btn" data-tab="skills">SKILLS</button>
+            </nav>
         </div>
+
         <div class="header-right">
+            <div class="rank-badge">RANK <span id="rankValue">E</span></div>
+            <div class="level-badge">LVL <span id="userLevel">1</span></div>
             <span class="username" id="headerUsername">Loading...</span>
             <div class="bgm-controls" style="display: flex; align-items: center; margin-right: 1rem;">
                 <button id="bgmToggleBtn" class="btn-icon" title="Toggle Music"
@@ -34,6 +43,13 @@
                 <input type="range" id="bgmVolumeSlider" min="0" max="1" step="0.1" value="0.3"
                     class="volume-slider hidden" style="width: 60px;">
             </div>
+
+            <!-- About System Button (Profile-like) -->
+            <button class="btn btn-small btn-secondary" onclick="window.location.href='about.html'" title="System Info"
+                style="margin-right: 0.5rem;">
+                About
+            </button>
+
             <button class="btn btn-small btn-secondary" onclick="toggleFeedbackModal()" title="Report Issue"
                 style="margin-right: 0.5rem; font-size: 1.2rem;">⚠️</button>
             <button class="btn btn-small btn-primary" id="profileBtn" style="margin-right: 0.5rem;">Profile</button>

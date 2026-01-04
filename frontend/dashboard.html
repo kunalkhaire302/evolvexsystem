@@ -325,6 +325,16 @@
     <!-- 2. Hidden Audio Player -->
     <audio id="skillAudioPlayer"></audio>
 
+    <!-- 3. Generic Productivity Timer Overlay -->
+    <div id="genericTimerOverlay" class="interaction-overlay hidden">
+        <div class="timer-container">
+            <h2 id="timerLabel" style="color:white; margin-bottom:1rem;">Focus</h2>
+            <div id="genericTimerDisplay"
+                style="font-size: 4rem; color: #00ffaa; font-family: monospace; font-weight: bold;">25:00</div>
+            <button class="btn btn-outline" style="margin-top:2rem;" onclick="stopGenericTimer()">STOP</button>
+        </div>
+    </div>
+
     <!-- Active Dungeon Overlay -->
     <div id="dungeonOverlay" class="dungeon-overlay hidden">
         <div class="dungeon-hud">

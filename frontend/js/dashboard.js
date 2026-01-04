@@ -113,6 +113,9 @@ function updateStatsDisplay() {
 /**
  * Load Quests
  */
+/**
+ * Load Quests
+ */
 async function loadQuests() {
     try {
         const response = await API.getAvailableQuests();
@@ -120,32 +123,34 @@ async function loadQuests() {
         displayQuests();
     } catch (error) {
         console.error('Failed to load quests:', error);
-        document.getElementById('questsContainer').innerHTML = `
+        // Fallback error display
+        const errHtml = `
             <div class="loading" style="text-align: center; padding: 2rem; color: var(--text-muted);">
                 <p style="margin-bottom: 0.5rem;">⚠️ Unable to load quests</p>
                 <p style="font-size: 0.9rem;">Make sure the backend server is running</p>
             </div>
         `;
+        const pList = document.getElementById('physicalQuestsList');
+        if (pList) pList.innerHTML = errHtml;
     }
 }
 
 /**
- * Display Quests
+ * Display Quests (Split System)
  */
 function displayQuests() {
-    const container = document.getElementById('questsContainer');
+    const physicalList = document.getElementById('physicalQuestsList');
+    const systemList = document.getElementById('systemQuestsList');
 
-    if (questsData.length === 0) {
-        container.innerHTML = '<div class="loading">No quests available. Try resting to restore stamina.</div>';
-        return;
-    }
+    if (!physicalList || !systemList) return;
 
-    container.innerHTML = questsData.map(quest => `
-        <div class="quest-card" data-quest-id="${quest.quest_id}">
+    // Helper to generate Card HTML
+    const createQuestCard = (quest, styleColor) => `
+        <div class="quest-card" data-quest-id="${quest.quest_id}" style="border-left: 3px solid ${styleColor}; animation: fadeIn 0.5s;">
             <div class="quest-header">
                 <div>
-                    <h3 class="quest-title">${quest.title}</h3>
-                    <span class="quest-difficulty difficulty-${quest.difficulty}">${quest.difficulty}</span>
+                    <h3 class="quest-title" style="color: ${styleColor}">${quest.title}</h3>
+                    <span class="quest-difficulty difficulty-${quest.difficulty}" style="border-color:${styleColor}; color:${styleColor}">${quest.difficulty}</span>
                 </div>
             </div>
             <p class="quest-description">${quest.description}</p>
@@ -154,66 +159,92 @@ function displayQuests() {
                     <span class="reward-icon">⭐</span>
                     <span>+${quest.exp_reward} EXP</span>
                 </div>
-                ${Object.entries(quest.stat_rewards || {}).map(([stat, value]) => `
+                 ${Object.entries(quest.stat_rewards || {}).map(([stat, value]) => `
                     <div class="reward-item">
                         <span class="reward-icon">${getStatIcon(stat)}</span>
                         <span>+${value} ${capitalize(stat)}</span>
                     </div>
                 `).join('')}
                 <div class="reward-item">
-                    <span class="reward-icon">🔋</span>
-                    <span>-${quest.stamina_cost} Stamina</span>
+                    <span class="reward-icon">⚡</span>
+                    <span>-${quest.stamina_cost} SP</span>
                 </div>
             </div>
             
-            ${quest.is_custom ? `
-            <button class="delete-quest-btn" data-quest-id="${quest.quest_id}" title="Remove Quest">
-                🗑️
-            </button>
-            ` : ''}
-            
-            <button class="edit-quest-btn" data-quest-id="${quest.quest_id}" title="Edit Quest">
-                ✏️
-            </button>
-
+            <div class="quest-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                 ${quest.is_custom ? `
+                <button class="btn-icon delete-quest-btn" data-quest-id="${quest.quest_id}" title="Remove Quest" style="color: var(--status-danger);">
+                    🗑️
+                </button>
+                ` : ''}
+                <button class="btn btn-small btn-primary complete-quest-btn" data-quest-id="${quest.quest_id}">
+                    COMPLETE
+                </button>
+            </div>
         </div>
-    `).join('');
+    `;
 
-    // Add click handlers for Quest Card (Completion)
-    document.querySelectorAll('.quest-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            // Prevent triggering if delete button was clicked
-            if (e.target.closest('.delete-quest-btn')) return;
+    // Clear lists
+    physicalList.innerHTML = '';
+    systemList.innerHTML = '';
 
-            const questId = card.dataset.questId;
+    // Check if empty
+    if (questsData.length === 0) {
+        systemList.innerHTML = '<div class="loading">No active quests.</div>';
+        return;
+    }
+
+    // Filter and Render
+    let hasPhysical = false;
+    let hasSystem = false;
+
+    questsData.forEach(quest => {
+        // Determine category (default to system if missing)
+        const isPhysical = quest.category === 'physical' || quest.quest_id.startsWith('physical_');
+
+        if (isPhysical) {
+            hasPhysical = true;
+            physicalList.innerHTML += createQuestCard(quest, '#00ffaa');
+        } else {
+            hasSystem = true;
+            systemList.innerHTML += createQuestCard(quest, 'var(--primary-cyan)');
+        }
+    });
+
+    // Empty state messages
+    if (!hasPhysical) physicalList.innerHTML = '<div class="empty-state">No physical training active.</div>';
+    if (!hasSystem) systemList.innerHTML = '<div class="empty-state">No system missions active.</div>';
+
+    attachQuestHandlers();
+}
+
+/**
+ * Attach Event Handlers (Refactored)
+ */
+function attachQuestHandlers() {
+    // Complete Handlers
+    document.querySelectorAll('.complete-quest-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const questId = btn.dataset.questId;
             completeQuest(questId);
         });
     });
 
-    // Add click handlers for Delete Button
+    // Delete Handlers
     document.querySelectorAll('.delete-quest-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-            e.stopPropagation(); // Stop event bubbling to card click
-            const questId = btn.dataset.questId;
-
-            if (confirm('Are you sure you want to remove this quest?')) {
-                try {
-                    await API.deleteQuest(questId);
-                    showToast('Quest removed successfully', 'success');
-                    loadQuests(); // Reload list
-                } catch (error) {
-                    showToast(error.message || 'Failed to remove quest', 'error');
-                }
-            }
-        });
-    });
-
-    // Add click handlers for Edit Button
-    document.querySelectorAll('.edit-quest-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const questId = btn.dataset.questId;
-            openEditQuestModal(questId);
+            if (confirm('Remove this custom quest?')) {
+                try {
+                    await API.deleteQuest(questId);
+                    showToast('Quest removed', 'success');
+                    loadQuests();
+                } catch (error) {
+                    showToast('Failed to remove quest', 'error');
+                }
+            }
         });
     });
 }

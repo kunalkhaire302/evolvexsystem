@@ -892,14 +892,14 @@ function initBGM() {
                 isBgmPlaying = true;
                 toggleBtn.classList.add('bgm-playing');
                 volumeSlider.classList.remove('hidden');
-                showToast("🎵 Music Started", "info");
+                showToast("🔊 BGM SYSTEM: ONLINE", "info");
             }).catch(e => console.log("Audio play failed:", e));
         } else {
             bgmPlayer.pause();
             isBgmPlaying = false;
             toggleBtn.classList.remove('bgm-playing');
             volumeSlider.classList.add('hidden');
-            showToast("⏸️ Music Paused", "info");
+            showToast("🔇 BGM SYSTEM: OFFLINE", "info");
         }
     });
 

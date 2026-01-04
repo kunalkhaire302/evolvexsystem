@@ -1,13 +1,14 @@
 /* Landing Page - Unified Background */
 .landing-page {
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 100vh;
 }
 
 .landing-container {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    height: 100vh;
+    min-height: 100vh;
     max-width: 100%;
     padding: 0;
     gap: 0;

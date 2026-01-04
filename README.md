@@ -6,6 +6,36 @@
 
 ---
 
+## 🌐 **Live Demo**
+
+**The project is deployed and live on Render!**
+
+🔗 **Access the System:** [https://evolvexsystem-tcz2.onrender.com/](https://evolvexsystem-tcz2.onrender.com/)
+
+---
+
+## 📝 **Registration Rules**
+
+When creating a new account, please follow these guidelines:
+
+### **Username**
+- Must be unique (not already taken by another user)
+- Required field
+
+### **Email**
+- Must be a valid email format (e.g., `player@example.com`)
+- Must be unique (one account per email)
+- Required field
+
+### **Password**
+- Required field
+- Passwords are securely hashed using bcrypt encryption
+- Choose a strong password for better security
+
+> ⚠️ **Note:** Both username and email must be unique across the system. If registration fails, try a different username or email.
+
+---
+
 ## ⚡ **Key Features**
 
 ### 🎮 **Player Status**

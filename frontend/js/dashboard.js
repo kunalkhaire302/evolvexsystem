@@ -290,15 +290,23 @@ function displaySkills() {
     if (userSkills.length > 0) {
         html += '<div class="skills-grid">';
         html += userSkills.map(skill => `
-            <div class="skill-card unlocked">
+            <div class="skill-card unlocked" data-skill-id="${skill.skill_id}">
                 <div class="skill-header">
                     <span class="skill-name">${skill.name}</span>
                     <span class="skill-type type-${skill.type}">${skill.type}</span>
                 </div>
-                <p class="skill-description">Level ${skill.level} / ${skill.max_level}</p>
+                <p class="skill-description">
+                    ${skill.description}
+                    ${skill.type === 'active' ? `<br><small>Stamina Cost: ${skill.stamina_cost}</small>` : ''}
+                </p>
                 <div class="skill-progress">
                     <div class="skill-progress-bar" style="width: ${(skill.exp / skill.exp_required) * 100}%"></div>
                 </div>
+                ${skill.type === 'active' ? `
+                <button class="btn btn-small btn-primary use-skill-btn" style="margin-top: 0.5rem; width: 100%;">
+                    Use Skill
+                </button>
+                ` : ''}
             </div>
         `).join('');
         html += '</div>';
@@ -345,6 +353,32 @@ function displaySkills() {
             unlockSkill(skillId);
         });
     });
+
+    // Add use skill handlers
+    document.querySelectorAll('.use-skill-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const skillCard = e.target.closest('.skill-card');
+            const skillId = skillCard.dataset.skillId;
+            useSkill(skillId);
+        });
+    });
+}
+
+/**
+ * Use Active Skill
+ */
+async function useSkill(skillId) {
+    try {
+        const response = await API.useSkill(skillId);
+        showToast(response.message, 'success');
+
+        // Reload profile to update stats (Health/Stamina/EXP)
+        await loadUserProfile();
+
+    } catch (error) {
+        showToast(error.message || 'Failed to use skill', 'error');
+    }
 }
 
 /**

@@ -823,29 +823,65 @@ def delete_quest(quest_id):
         print(f"Delete quest error: {e}")
         return jsonify({'error': str(e)}), 500
 
+# Init default skills
+def init_skills():
+    try:
+        # Check if default skills exist
+        if db.skills.count_documents({'skill_id': 'active_heal'}) == 0:
+            skills = [
+                {
+                    'skill_id': 'active_heal',
+                    'name': 'Recovery',
+                    'type': 'active',
+                    'description': 'Restores 30 Health. Costs 20 Stamina.',
+                    'effect': {'health': 30},
+                    'stamina_cost': 20,
+                    'unlock_cost': 1,
+                    'max_level': 5
+                },
+                {
+                    'skill_id': 'active_focus',
+                    'name': 'Focus Mode',
+                    'type': 'active',
+                    'description': 'Grants 50 EXP immediately. Costs 15 Stamina.',
+                    'effect': {'exp': 50},
+                    'stamina_cost': 15,
+                    'unlock_cost': 2,
+                    'max_level': 10
+                },
+                {
+                    'skill_id': 'passive_str',
+                    'name': 'Iron Will',
+                    'type': 'passive',
+                    'description': 'Increases Strength by 5.',
+                    'stat_bonus': {'strength': 5},
+                    'unlock_cost': 2,
+                    'max_level': 1
+                }
+            ]
+            db.skills.insert_many(skills)
+            print("✅ Default skills initialized")
+    except Exception as e:
+        print(f"❌ Error initializing skills: {e}")
+
+try:
+    init_skills()
+except:
+    pass
+
 # Get skills
 @app.route('/api/skills/', methods=['GET'])
 @jwt_required()
 def get_skills():
     try:
-        # Sample skills
         # Fetch skills from database
         available_skills = list(db.skills.find({}, {'_id': 0}))
         
-        # Fallback if DB is empty
-        if not available_skills:
-             available_skills = [
-                {
-                    'skill_id': 'focus_mode',
-                    'name': 'Focus Mode',
-                    'type': 'active',
-                    'description': 'Increases efficiency and concentration',
-                    'max_level': 10,
-                    'base_effect': 'Efficiency +5%',
-                    'level_bonus': 'Efficiency +5% per level',
-                    'unlock_cost': 2
-                }
-             ]
+        # Fallback if DB is empty (should not happen with init_skills)
+        if not available_skills and db.skills.count_documents({}) == 0:
+             # Just in case init failed silently or first run
+             init_skills()
+             available_skills = list(db.skills.find({}, {'_id': 0}))
         
         from bson.objectid import ObjectId
         user_id = get_jwt_identity()
@@ -872,6 +908,99 @@ def get_skills():
         
     except Exception as e:
         print(f"Skills error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# Use Skill
+@app.route('/api/skills/use', methods=['POST'])
+@jwt_required()
+def use_skill():
+    try:
+        from bson.objectid import ObjectId
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        skill_id = data.get('skill_id')
+        
+        # Verify user has skill
+        user_skill = db.user_skills.find_one({'user_id': user_id, 'skill_id': skill_id})
+        if not user_skill:
+             return jsonify({'error': 'You do not possess this skill'}), 400
+
+        # Get skill definition
+        skill_def = db.skills.find_one({'skill_id': skill_id})
+        if not skill_def:
+             return jsonify({'error': 'Skill not found in DB'}), 500
+             
+        if skill_def.get('type') != 'active':
+             return jsonify({'error': 'This skill is passive and cannot be activated manually'}), 400
+
+        stamina_cost = skill_def.get('stamina_cost', 0)
+        effect = skill_def.get('effect', {})
+
+        # Check stamina
+        stats = db.stats.find_one({'user_id': user_id})
+        if stats['stamina'] < stamina_cost:
+             return jsonify({'error': f'Not enough stamina (Required: {stamina_cost})'}), 400
+             
+        # Deduct stamina
+        new_stamina = stats['stamina'] - stamina_cost
+        db.stats.update_one({'user_id': user_id}, {'$set': {'stamina': new_stamina}})
+        
+        # Apply Effects
+        messages = []
+        
+        # 1. Health Restore
+        if 'health' in effect:
+            heal_amount = effect['health']
+            new_health = min(stats['health'] + heal_amount, stats['max_health'])
+            db.stats.update_one({'user_id': user_id}, {'$set': {'health': new_health}})
+            messages.append(f"Restored {heal_amount} Health")
+            
+        # 2. EXP Gain
+        if 'exp' in effect:
+            exp_gain = effect['exp']
+            # Logic similar to quest completion (fetch user, add exp, check level up)
+            # For brevity, let's do a simplified version or call a helper if we had one.
+            # We'll stick to inline for safety.
+            
+            user = db.users.find_one({'_id': ObjectId(user_id)})
+            new_exp = user['exp'] + exp_gain
+            exp_required = user['exp_required']
+            leveled_up = False
+            new_level = user['level']
+            
+            if new_exp >= exp_required:
+                leveled_up = True
+                new_level += 1
+                new_exp -= exp_required
+                new_exp_required = (new_level ** 2) * 100
+                new_skill_points = user['skill_points'] + 1
+                
+                db.users.update_one(
+                    {'_id': ObjectId(user_id)},
+                    {'$set': {
+                        'level': new_level,
+                        'exp': new_exp,
+                        'exp_required': new_exp_required,
+                        'skill_points': new_skill_points
+                    }}
+                )
+                messages.append(f"Gained {exp_gain} EXP (LEVEL UP!)")
+            else:
+                db.users.update_one(
+                    {'_id': ObjectId(user_id)},
+                    {'$set': {'exp': new_exp}}
+                )
+                messages.append(f"Gained {exp_gain} EXP")
+
+        message = "Skill used! " + ", ".join(messages)
+        
+        return jsonify({
+            'message': message,
+            'success': True
+        }), 200
+
+    except Exception as e:
+        print(f"Use skill error: {e}")
         return jsonify({'error': str(e)}), 500
 
 # Unlock skill

@@ -1,0 +1,2 @@
+Starting project at K:\assignment\projects\evolvexsystem\mobile
+Starting Metro Bundler

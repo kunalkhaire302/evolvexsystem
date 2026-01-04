@@ -1,0 +1,100 @@
+{
+  "id": "8c17739e-337b-4f17-836f-d233d3af01c9",
+  "createdAt": "2026-01-04T12:40:48.891Z",
+  "runtimeVersion": "exposdk:54.0.0",
+  "launchAsset": {
+    "key": "bundle",
+    "contentType": "application/javascript",
+    "url": "http://qy62-fa-anonymous-8088.exp.direct/index.ts.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=app&unstable_transformProfile=hermes-stable"
+  },
+  "assets": [],
+  "metadata": {},
+  "extra": {
+    "eas": {},
+    "expoClient": {
+      "name": "EvolveX System",
+      "slug": "evolvex-system",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "userInterfaceStyle": "dark",
+      "newArchEnabled": true,
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#0a0a0f",
+        "imageUrl": "http://qy62-fa-anonymous-8088.exp.direct/assets/./assets/splash-icon.png"
+      },
+      "ios": {
+        "supportsTablet": true,
+        "bundleIdentifier": "com.evolvex.system"
+      },
+      "android": {
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/adaptive-icon.png",
+          "backgroundColor": "#0a0a0f",
+          "foregroundImageUrl": "http://qy62-fa-anonymous-8088.exp.direct/assets/./assets/adaptive-icon.png"
+        },
+        "package": "com.evolvex.system",
+        "edgeToEdgeEnabled": true,
+        "predictiveBackGestureEnabled": false,
+        "permissions": [
+          "android.permission.RECORD_AUDIO"
+        ]
+      },
+      "web": {
+        "favicon": "./assets/favicon.png"
+      },
+      "plugins": [
+        "expo-secure-store",
+        "expo-font",
+        [
+          "expo-image-picker",
+          {
+            "photosPermission": "Allow EvolveX to access your photos for profile pictures."
+          }
+        ]
+      ],
+      "_internal": {
+        "isDebug": false,
+        "projectRoot": "K:\\assignment\\projects\\evolvexsystem\\mobile",
+        "dynamicConfigPath": {},
+        "staticConfigPath": "K:\\assignment\\projects\\evolvexsystem\\mobile\\app.json",
+        "packageJsonPath": "K:\\assignment\\projects\\evolvexsystem\\mobile\\package.json",
+        "pluginHistory": {
+          "expo-secure-store": {
+            "name": "expo-secure-store",
+            "version": "15.0.8"
+          },
+          "expo-font": {
+            "name": "expo-font",
+            "version": "14.0.10"
+          },
+          "expo-image-picker": {
+            "name": "expo-image-picker",
+            "version": "17.0.10"
+          }
+        }
+      },
+      "sdkVersion": "54.0.0",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "iconUrl": "http://qy62-fa-anonymous-8088.exp.direct/assets/./assets/icon.png",
+      "hostUri": "qy62-fa-anonymous-8088.exp.direct"
+    },
+    "expoGo": {
+      "debuggerHost": "qy62-fa-anonymous-8088.exp.direct",
+      "developer": {
+        "tool": "expo-cli",
+        "projectRoot": "K:\\assignment\\projects\\evolvexsystem\\mobile"
+      },
+      "packagerOpts": {
+        "dev": true
+      },
+      "mainModuleName": "index.ts"
+    },
+    "scopeKey": "@anonymous/evolvex-system-34d8f09b-c965-4db7-a05c-2d1bdbd3be31"
+  }
+}

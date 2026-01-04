@@ -187,67 +187,115 @@
 }
 
 /* Responsive Design */
+/* Responsive Design Refined */
 @media (max-width: 1024px) {
     .landing-container {
-        grid-template-columns: 1fr;
-        overflow-y: auto;
-        height: auto;
+        display: flex;
+        flex-direction: column;
         min-height: 100vh;
-        display: block;
+        /* Center content vertically if screen is tall enough, otherwise scroll */
+        justify-content: center;
     }
 
     .landing-header {
-        border-right: none;
-        padding: 3rem 2rem;
-        min-height: auto;
-    }
-
-    .main-logo {
-        max-width: 350px !important;
-    }
-
-    .auth-container {
         padding: 2rem;
-        min-height: auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .landing-header {
-        padding: 2rem 1.5rem;
+        flex: 0 0 auto;
+        /* Allow header to shrink/grow as needed, but don't force it */
+        justify-content: flex-end;
+        /* Push content down closer to form */
     }
 
     .main-logo {
-        max-width: 250px !important;
-    }
-
-    .main-title {
-        font-size: 3rem;
+        max-width: 300px !important;
+        margin-bottom: 1rem;
     }
 
     .subtitle {
         font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+        font-size: 0.9rem;
+    }
+
+    .auth-container {
+        padding: 1.5rem 2rem 3rem 2rem;
+        flex: 1 0 auto;
+        align-items: flex-start;
+        /* Start from top of container area */
     }
 
     .auth-form {
-        padding: 2rem;
+        margin: 0 auto;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-page {
+        /* Ensure background covers everything */
+        background-attachment: fixed;
+    }
+
+    .landing-header {
+        padding: 3rem 1.5rem 1.5rem 1.5rem;
+    }
+
+    .main-logo {
+        max-width: 240px !important;
+    }
+
+    .auth-form {
+        padding: 2rem 1.5rem;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    .form-title {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .form-subtitle {
+        text-align: center;
+    }
+
+    /* Taller inputs for easier touch */
+    .landing-page .input-group input {
+        padding: 0.9rem 1.1rem;
+        font-size: 1rem;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .landing-page .input-group label {
+        margin-left: 0.2rem;
+        /* Align with input padding */
+    }
+
+    .landing-page .btn {
+        padding: 1rem;
+        font-size: 1rem;
+        letter-spacing: 0.2em;
     }
 }
 
 @media (max-width: 480px) {
     .landing-header {
-        padding: 1.5rem 1rem;
+        padding: 2rem 1rem 1rem 1rem;
     }
 
     .main-logo {
         max-width: 200px !important;
     }
 
-    .form-title {
-        font-size: 1.8rem;
+    .auth-container {
+        padding: 1rem 1rem 2rem 1rem;
     }
 
-    .input-group input {
-        padding: 0.8rem 1rem;
+    .auth-form {
+        padding: 1.5rem;
+        border-radius: 12px;
     }
 }

@@ -1632,6 +1632,154 @@ body.dashboard-page {
     }
 }
 
+@media (max-width: 900px) {
+
+    /* === MOBILE HEADER === */
+    .dashboard-header {
+        flex-direction: column;
+        padding: 1rem 1.2rem;
+        background: rgba(10, 10, 20, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--primary-cyan-dim);
+        gap: 0.8rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.8rem;
+        text-align: center;
+        letter-spacing: 2px;
+        margin-bottom: 0.2rem;
+        text-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* === MOBILE PANELS === */
+    .dashboard-main {
+        padding: 1rem 0.8rem;
+        gap: 1.2rem;
+    }
+
+    .panel {
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 240, 255, 0.1);
+        background: linear-gradient(160deg, rgba(10, 10, 20, 0.9) 0%, rgba(15, 15, 30, 0.95) 100%);
+    }
+
+    .panel-header {
+        padding: 1.2rem;
+        flex-direction: column;
+        gap: 0.8rem;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .panel-header h2 {
+        font-size: 1.4rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .panel-header>div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        /* Spread buttons */
+        gap: 0.5rem;
+    }
+
+    .panel-header .btn-small {
+        flex: 1;
+        text-align: center;
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    .panel-body {
+        padding: 1.2rem;
+    }
+
+    /* === STATUS PANEL REFINEMENT === */
+    .level-section {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1.2rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 240, 255, 0.05);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .level-display {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .level-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        letter-spacing: 2px;
+    }
+
+    .level-value {
+        font-size: 4rem;
+        line-height: 1;
+        background: linear-gradient(to bottom, #fff, var(--primary-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 10px var(--primary-glow));
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+
+    .stat-item {
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-icon {
+        font-size: 1.4rem;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+
+    /* === QUESTS & SKILLS === */
+    .quest-card,
+    .skill-card {
+        padding: 1.2rem;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.4);
+        margin-bottom: 0.5rem;
+    }
+
+    .quest-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .quest-difficulty {
+        align-self: flex-start;
+        font-size: 0.7rem;
+        padding: 0.3rem 0.8rem;
+    }
+}
+
 @media (max-width: 768px) {
     .main-title {
         font-size: 2.5rem;
@@ -1690,6 +1838,18 @@ body.dashboard-page {
 }
 
 @media (max-width: 480px) {
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .stats-grid {
+        gap: 0.6rem;
+    }
+
+    .level-value {
+        font-size: 3.5rem;
+    }
+
     .stats-grid {
         grid-template-columns: 1fr;
     }

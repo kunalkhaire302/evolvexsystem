@@ -847,7 +847,11 @@ def init_skills():
                     'scaling': {'health': 5}, # +5 per level
                     'stamina_cost': 20,
                     'unlock_cost': 1,
-                    'max_level': 5
+                    'max_level': 5,
+                    'real_world_effect': {
+                        'type': 'breathing',
+                        'duration': 60 # seconds
+                    }
                 },
                 {
                     'skill_id': 'active_focus',
@@ -858,7 +862,12 @@ def init_skills():
                     'scaling': {'exp': 5}, # +5 per level
                     'stamina_cost': 15,
                     'unlock_cost': 2,
-                    'max_level': 10
+                    'max_level': 10,
+                    'real_world_effect': {
+                        'type': 'audio',
+                        'src': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112762.mp3', 
+                        'label': 'Lo-Fi Beats'
+                    }
                 },
                 {
                     'skill_id': 'passive_str',
@@ -873,6 +882,17 @@ def init_skills():
             ]
             db.skills.insert_many(skills)
             print("✅ Default skills initialized")
+            
+        # Migration: Ensure existing skills have effects
+        db.skills.update_one(
+            {'skill_id': 'active_heal'},
+            {'$set': {'real_world_effect': {'type': 'breathing', 'duration': 60}}}
+        )
+        db.skills.update_one(
+            {'skill_id': 'active_focus'},
+            {'$set': {'real_world_effect': {'type': 'audio', 'src': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112762.mp3', 'label': 'Lo-Fi Beats'}}}
+        )
+
     except Exception as e:
         print(f"❌ Error initializing skills: {e}")
 

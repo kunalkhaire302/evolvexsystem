@@ -300,6 +300,20 @@
         </div>
     </div>
 
+    <!-- Real World Interactions -->
+
+    <!-- 1. Breathing Exercise Overlay -->
+    <div id="breathingOverlay" class="interaction-overlay hidden" onclick="stopBreathing()">
+        <div class="breathing-container">
+            <div class="breathing-text" id="breathingText">Breathe In...</div>
+            <div class="breathing-circle"></div>
+        </div>
+        <p class="overlay-hint">Click anywhere to stop</p>
+    </div>
+
+    <!-- 2. Hidden Audio Player -->
+    <audio id="skillAudioPlayer"></audio>
+
     <!-- Active Dungeon Overlay -->
     <div id="dungeonOverlay" class="dungeon-overlay hidden">
         <div class="dungeon-hud">

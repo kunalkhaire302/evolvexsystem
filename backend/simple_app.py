@@ -426,46 +426,92 @@ def restore_stamina():
 # Initialize default quests
 def init_quests():
     try:
-        # Check if default quests exist in main quests collection
-        # We check for one of the known IDs to avoid duplicates
-        if db.quests.count_documents({'quest_id': 'daily_coding'}) == 0:
+        # MIGRATION: Check if we have the new 'physical_pushups' quest. If not, re-seed.
+        if db.quests.count_documents({'quest_id': 'physical_pushups'}) == 0:
+            print("🔄 Migrating Quests to Physical/System Split...")
+            # Optional: Remove old defaults to avoid duplicates/confusion
+            db.quests.delete_many({'quest_id': {'$in': ['daily_coding', 'morning_exercise', 'study_session']}})
+            
             default_quests = [
+                # --- PHYSICAL TRAINING (The Daily Quest) ---
                 {
-                    'quest_id': 'daily_coding',
-                    'title': 'Code for 2 Hours',
-                    'description': 'Practice coding for 2 hours',
+                    'quest_id': 'physical_pushups',
+                    'title': '100 Push-ups',
+                    'description': 'Target: Pectalis Major, Triceps. Keep core tight.',
                     'type': 'daily',
-                    'difficulty': 'medium',
+                    'category': 'physical', # NEW FIELD
+                    'difficulty': 'SS',
                     'exp_reward': 100,
-                    'stat_rewards': {'intelligence': 3, 'agility': 1},
-                    'stamina_cost': 20,
-                    'is_custom': False
-                },
-                {
-                    'quest_id': 'morning_exercise',
-                    'title': 'Morning Exercise',
-                    'description': 'Complete 30 minutes of exercise',
-                    'type': 'daily',
-                    'difficulty': 'easy',
-                    'exp_reward': 50,
-                    'stat_rewards': {'strength': 2, 'stamina': 1},
+                    'stat_rewards': {'strength': 3},
                     'stamina_cost': 10,
                     'is_custom': False
                 },
                 {
-                    'quest_id': 'study_session',
-                    'title': 'Study Session',
-                    'description': 'Study for 1 hour',
-                    'type': 'skill',
+                    'quest_id': 'physical_situps',
+                    'title': '100 Sit-ups',
+                    'description': 'Target: Abdominal Muscles.',
+                    'type': 'daily',
+                    'category': 'physical',
+                    'difficulty': 'SS',
+                    'exp_reward': 100,
+                    'stat_rewards': {'agility': 1, 'stamina': 2},
+                    'stamina_cost': 10,
+                    'is_custom': False
+                },
+                {
+                    'quest_id': 'physical_squats',
+                    'title': '100 Squats',
+                    'description': 'Target: Quadriceps, Glutes.',
+                    'type': 'daily',
+                    'category': 'physical',
+                    'difficulty': 'SS',
+                    'exp_reward': 100,
+                    'stat_rewards': {'strength': 2, 'agility': 1},
+                    'stamina_cost': 10,
+                    'is_custom': False
+                },
+                {
+                    'quest_id': 'physical_run',
+                    'title': '10km Run',
+                    'description': 'Cardio Endurance Training.',
+                    'type': 'daily',
+                    'category': 'physical',
+                    'difficulty': 'SS',
+                    'exp_reward': 200,
+                    'stat_rewards': {'stamina': 5, 'agility': 3},
+                    'stamina_cost': 30,
+                    'is_custom': False
+                },
+
+                # --- SYSTEM MISSIONS ---
+                {
+                    'quest_id': 'sys_coding',
+                    'title': 'Code for 2 Hours',
+                    'description': 'Practice coding / Project Development.',
+                    'type': 'daily',
+                    'category': 'system',
+                    'difficulty': 'medium',
+                    'exp_reward': 150,
+                    'stat_rewards': {'intelligence': 4},
+                    'stamina_cost': 20,
+                    'is_custom': False
+                },
+                {
+                    'quest_id': 'sys_reading',
+                    'title': 'Read Technical Docs',
+                    'description': 'Acquire new knowledge.',
+                    'type': 'daily',
+                    'category': 'system',
                     'difficulty': 'easy',
-                    'exp_reward': 60,
+                    'exp_reward': 50,
                     'stat_rewards': {'intelligence': 2},
-                    'stamina_cost': 15,
+                    'stamina_cost': 10,
                     'is_custom': False
                 }
             ]
             db.quests.insert_many(default_quests)
-            print("✅ Default quests initialized")
+            print("✅ Quests initialized with Physical/System Split")
+            
     except Exception as e:
         print(f"❌ Error initializing quests: {e}")
 

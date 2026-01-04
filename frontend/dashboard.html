@@ -137,10 +137,30 @@
                     <button class="btn btn-small btn-primary" id="refreshQuestsBtn">Refresh</button>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="quests-container" id="questsContainer">
-                    <div class="loading">Loading quests...</div>
+            <div class="panel-body" style="display: flex; flex-direction: column; gap: 2rem;">
+
+                <!-- 1. PHYSICAL TRAINING (The "Daily Quest") -->
+                <div class="quest-section physical-section">
+                    <h3 class="section-title"
+                        style="color: #00ffaa; border-bottom: 1px solid #00ffaa; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                        💪 PHYSICAL TRAINING (DAILY)
+                    </h3>
+                    <div class="quests-container" id="physicalQuestsList">
+                        <div class="loading">Checking physical status...</div>
+                    </div>
                 </div>
+
+                <!-- 2. SYSTEM MISSIONS -->
+                <div class="quest-section system-section">
+                    <h3 class="section-title"
+                        style="color: var(--primary-cyan); border-bottom: 1px solid var(--primary-cyan); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                        🤖 SYSTEM MISSIONS
+                    </h3>
+                    <div class="quests-container" id="systemQuestsList">
+                        <div class="loading">Loading missions...</div>
+                    </div>
+                </div>
+
             </div>
         </section>
 

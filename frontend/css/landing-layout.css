@@ -68,18 +68,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem;
+    padding: 1.5rem;
 }
 
 .auth-form {
     display: none;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     background: rgba(10, 10, 20, 0.8);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 217, 255, 0.25);
-    border-radius: 16px;
-    padding: 2.5rem;
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
@@ -102,32 +102,32 @@
 
 .form-title {
     font-family: var(--font-system);
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: var(--primary-cyan);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
 }
 
 .form-subtitle {
     color: var(--text-secondary);
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
 }
 
 /* Registration Rules */
 .registration-rules {
     background: rgba(0, 217, 255, 0.08);
     border: 1px solid rgba(0, 217, 255, 0.2);
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
 }
 
 .rules-title {
     color: var(--primary-cyan);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
 }
 
 .rules-list {
@@ -138,8 +138,8 @@
 
 .rules-list li {
     color: var(--text-secondary);
-    font-size: 0.85rem;
-    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    padding: 0.15rem 0;
     padding-left: 1rem;
     position: relative;
 }
@@ -153,6 +153,31 @@
 
 .rules-list li strong {
     color: var(--text-primary);
+}
+
+/* Compact Input Styles for Landing Page */
+.landing-page .input-group {
+    margin-bottom: 1rem;
+}
+
+.landing-page .input-group label {
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+}
+
+.landing-page .input-group input {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+}
+
+.landing-page .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+}
+
+.landing-page .form-switch {
+    margin-top: 1rem;
+    font-size: 0.85rem;
 }
 
 /* Hide Features Grid */

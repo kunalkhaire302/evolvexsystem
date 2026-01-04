@@ -2248,38 +2248,114 @@ body.dashboard-page {
     to {
         box-shadow: 0 0 30px #ff0055;
     }
-}
 
-/* === BGM CONTROLS === */
-.bgm-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-icon:hover {
-    transform: scale(1.1);
-}
-
-.bgm-playing {
-    animation: music-pulse 2s infinite ease-in-out;
-    text-shadow: 0 0 10px #00ffaa;
-}
-
-@keyframes music-pulse {
-    0% {
-        transform: scale(1);
+    /* === REAL WORLD INTERACTIONS === */
+    .interaction-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 3000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(10px);
     }
 
-    50% {
+    .interaction-overlay.hidden {
+        display: none;
+    }
+
+    .breathing-container {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .breathing-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #00ffaa, #008855);
+        box-shadow: 0 0 50px #00ffaa;
+        animation: breathe 8s infinite ease-in-out;
+        opacity: 0.5;
+    }
+
+    .breathing-text {
+        position: absolute;
+        color: #fff;
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px #000;
+        z-index: 3100;
+        pointer-events: none;
+    }
+
+    .overlay-hint {
+        margin-top: 2rem;
+        color: #888;
+        font-size: 0.9rem;
+    }
+
+    @keyframes breathe {
+        0% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        40% {
+            transform: scale(3);
+            opacity: 0.8;
+        }
+
+        60% {
+            transform: scale(3);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+    }
+
+    /* === BGM CONTROLS === */
+    .bgm-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-icon:hover {
         transform: scale(1.1);
     }
 
-    100% {
-        transform: scale(1);
+    .bgm-playing {
+        animation: music-pulse 2s infinite ease-in-out;
+        text-shadow: 0 0 10px #00ffaa;
     }
-}
 
-.volume-slider.hidden {
-    display: none;
-}
+    @keyframes music-pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .volume-slider.hidden {
+        display: none;
+    }

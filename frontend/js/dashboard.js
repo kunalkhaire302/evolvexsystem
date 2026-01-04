@@ -925,3 +925,54 @@ function initBGM() {
 
 // Call initBGM on load
 document.addEventListener('DOMContentLoaded', initBGM);
+
+/* === REAL WORLD UTILITIES === */
+window.handleSkillEffect = function (effect) {
+    if (!effect) return;
+
+    if (effect.type === 'breathing') {
+        const overlay = document.getElementById('breathingOverlay');
+        const text = document.getElementById('breathingText');
+
+        if (overlay) overlay.classList.remove('hidden');
+        if (text) text.textContent = "Breathe In...";
+    }
+
+    if (effect.type === 'audio') {
+        const player = document.getElementById('skillAudioPlayer');
+        if (player) {
+            if (player.src !== effect.src) {
+                player.src = effect.src;
+            }
+            if (player.paused) {
+                player.play();
+                showToast(`🎵 Playing: ${effect.label}`, 'info');
+            } else {
+                player.pause();
+                showToast("⏸️ Audio Paused", 'info');
+            }
+        }
+    }
+}
+
+window.stopBreathing = function () {
+    document.getElementById('breathingOverlay').classList.add('hidden');
+}
+
+// Update useSkill to use the global effect handler
+const originalUseSkill = window.useSkill;
+window.useSkill = async function (skillId) {
+    try {
+        const response = await API.useSkill(skillId);
+        showToast(response.message, 'success');
+
+        if (response.real_world_effect) {
+            window.handleSkillEffect(response.real_world_effect);
+        }
+
+        await loadUserProfile();
+        setTimeout(loadSkills, 500); // Slight delay for refresh
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+};

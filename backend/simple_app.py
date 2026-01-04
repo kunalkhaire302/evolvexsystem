@@ -1670,6 +1670,38 @@ def get_leaderboard():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Feedback Endpoint
+@app.route('/api/feedback', methods=['POST'])
+@jwt_required()
+def submit_feedback():
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        
+        category = data.get('category')
+        rating = data.get('rating')
+        message = data.get('message')
+        
+        if not category or not rating or not message:
+            return jsonify({'message': 'MISSING DATA FIELDS'}), 400
+            
+        feedback_entry = {
+            'user_id': ObjectId(user_id),
+            'category': category,
+            'rating': int(rating),
+            'message': message[:500], # Limit char count
+            'created_at': datetime.utcnow(),
+            'status': 'pending'
+        }
+        
+        db.feedback.insert_one(feedback_entry)
+        
+        return jsonify({'message': 'FEEDBACK LOGGED. SYSTEM ANALYSIS IN PROGRESS.', 'success': True}), 201
+
+    except Exception as e:
+        print(f"Error submitting feedback: {e}")
+        return jsonify({'message': 'SYSTEM ERROR: FEEDBACK FAILED'}), 500
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🎮 THE SYSTEM - Backend Server")

@@ -2379,7 +2379,39 @@ body.dashboard-page {
 .volume-slider.hidden {
     display: none;
 
-    /* === GLOBAL SCROLLBAR === */
+    /* === TYPOGRAPHY APPLIED === */
+    .level-value,
+    .stat-value,
+    .currency,
+    .timer-display,
+    #genericTimerDisplay,
+    .exp-text,
+    .rank-badge {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+        /* Fixed width numbers */
+        letter-spacing: -0.5px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .btn,
+    .nav-btn,
+    .logo-text,
+    .form-title {
+        font-family: var(--font-system);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    /* Ensure stats are mono */
+    .stat-row span:last-child {
+        font-family: var(--font-mono);
+        font-weight: 700;
+    }
+
     ::-webkit-scrollbar {
         width: 10px;
         height: 10px;

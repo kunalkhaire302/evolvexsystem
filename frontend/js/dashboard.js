@@ -718,8 +718,8 @@ function initDungeonSystem() {
         headerRight.appendChild(gateBtn);
     }
 
-    // Enter Dungeon Button
-    document.getElementById('enterDungeonBtn')?.addEventListener('click', startDungeon);
+    // Enter Dungeon Button (Handled via onclick in HTML)
+    // document.getElementById('enterDungeonBtn')?.addEventListener('click', startDungeon);
 
     // Dungeon Controls
     document.getElementById('attackBossBtn')?.addEventListener('click', strikeBoss);
@@ -743,8 +743,11 @@ window.selectDungeon = function (rank) {
     if (rank === 'S') details.textContent = "S-Rank | 4 Hours | GOD LEVEL FOCUS";
 };
 
-async function startDungeon() {
-    if (!selectedRank) return;
+window.startDungeon = async function () {
+    if (!selectedRank) {
+        showToast("Please select a rank first!", "warning");
+        return;
+    }
 
     try {
         const response = await API.startDungeon(selectedRank);

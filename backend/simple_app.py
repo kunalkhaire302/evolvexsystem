@@ -115,6 +115,11 @@ def serve_index():
 def serve_dashboard():
     return send_from_directory(app.static_folder, 'dashboard.html')
 
+# Serve About Page
+@app.route('/about.html')
+def serve_about():
+    return send_from_directory(app.static_folder, 'about.html')
+
 # Health check
 @app.route('/api/health')
 def health():

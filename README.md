@@ -36,28 +36,33 @@ When creating a new account, please follow these guidelines:
 
 ---
 
-## ⚡ **Key Features**
+## ⚡ **Key Features (v4.0 - EGO Update)**
+
+### 🧠 **System Intelligence (The "EGO")**
+The System is now "Aware" of your actions and stats:
+-   **Weakness Exposure:** Detects stat imbalances (e.g., Low Agility) and warns you.
+-   **Recommendation Engine:** Suggests specific quests (e.g., "10km Run") to fix weaknesses.
+-   **Burnout Prediction:** Warns you if Stamina drops below 20% to prevent overtraining.
+-   **Identity Tokens:** Automatically awards titles like **"Night Owl"** or **"Early Riser"** based on your behavior.
+-   **Streak Protection:** Login streaks now **Decay** (-1 day) instead of resetting after 24h inactivity.
+
+### 📜 **Quest System 2.0**
+-   **Physical Training:** Dedicated section for "The Daily Quest" (Push-ups, Sit-ups, Running).
+-   **System Missions:** Separate section for Productivity (Coding, Reading) and Custom Goals.
+-   **Visuals:** Color-coded cards (Green for Physical, Cyan for System).
 
 ### 🎮 **Player Status**
-- **Leveling System:** Earn EXP from quests to level up.
-- **Stats:** Track Strength, Agility, Intelligence, Stamina.
-- **Health:** HP mechanics (future combat features).
-- **Titles:** Unlock titles like "Wolf Slayer" or "Shadow Monarch".
-
-### 📜 **Quests**
-- **Daily Quests:** "Player! Do 100 Pushups!" (System generated).
-- **Custom Quests:** Create your own tasks (Standard/Hard/Boss).
-- **Quest Overrides:** Edit system quests for your personal goals without affecting others.
+-   **Leveling System:** Earn EXP from quests to level up.
+-   **Stats:** Track Strength, Agility, Intelligence, Stamina.
+-   **Titles:** Behavior-based & Achievement-based titles.
 
 ### ⚔️ **Skills & Abilities**
-- **Unlock Skills:** Use Skill Points (SP) gained from leveling.
-- **Active Skills:** Sprint, Stealth.
-- **Passive Skills:** Quick Learner, Iron Body.
-- **Inactivity Penalty:** Lose 1 Level if you don't login for 48 hours! ⚠️
+-   **Real-World Skills:** Pomodoro Timer, Focus Music, Breathing Exercises.
+-   **Unlock System:** Use Skill Points (SP) to unlock productivity tools.
 
-### 👤 **Profile**
-- **Hunter ID Card:** View your generated avatar, rank, and job class.
-- **Customization:** Upload your own profile picture.
+### 👤 **Profile HUD**
+-   **Hunter ID Card:** View your generated avatar, rank, and "System Notices".
+-   **Customization:** Upload your own profile picture.
 
 ---
 

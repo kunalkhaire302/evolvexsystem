@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About System | EvolveX</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .about-container {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: rgba(10, 10, 15, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .about-header h1 {
+            font-family: var(--font-system);
+            color: var(--primary-cyan);
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--primary-cyan);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-system);
+        }
+
+        .creator-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.4), rgba(10, 20, 30, 0.6));
+            border: 1px solid var(--primary-cyan);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-top: 3rem;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .creator-name {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-system);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .github-btn {
+            background: #24292e;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .github-btn:hover {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .insta-btn {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            color: #fff;
+            border: none;
+        }
+
+        .insta-btn:hover {
+            box-shadow: 0 0 10px rgba(225, 48, 108, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Back Button */
+        .back-nav {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="back-nav">
+        <a href="dashboard.html" class="btn btn-outline">← RETURN TO SYSTEM</a>
+    </div>
+
+    <div class="about-container">
+        <div class="about-header">
+            <h1>SYSTEM INFORMATION</h1>
+            <p>EvolveX System v4.0 (EGO Update)</p>
+        </div>
+
+        <section>
+            <h2 class="section-title">⚡ KEY FEATURES</h2>
+
+            <h3>🧠 System Intelligence (The "EGO")</h3>
+            <ul>
+                <li><strong>Weakness Exposure:</strong> Detects stat imbalances (e.g., Low Agility) and warns you.</li>
+                <li><strong>Recommendation Engine:</strong> Suggests specific quests (e.g., "10km Run") to fix
+                    weaknesses.</li>
+                <li><strong>Burnout Prediction:</strong> Warns you if Stamina drops below 20% to prevent overtraining.
+                </li>
+                <li><strong>Identity Tokens:</strong> Automatically awards titles like "Night Owl" or "Early Riser".
+                </li>
+                <li><strong>Streak Protection:</strong> Login streaks Decay (-1 day) instead of resetting.</li>
+            </ul>
+
+            <h3>📜 Quest System 2.0</h3>
+            <ul>
+                <li><strong>Physical Training:</strong> Dedicated section for "The Daily Quest".</li>
+                <li><strong>System Missions:</strong> Separate section for Productivity and Coding.</li>
+            </ul>
+
+            <h3>🎮 Player Status</h3>
+            <ul>
+                <li><strong>Leveling System:</strong> Earn EXP, Level Up, Gain SP.</li>
+                <li><strong>Stats:</strong> Strength, Agility, Intelligence, Stamina.</li>
+            </ul>
+        </section>
+
+        <!-- CREATOR SECTION -->
+        <div class="creator-card">
+            <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">DEVELOPED BY</div>
+            <div class="creator-name">KUNAL KHAIRE</div>
+            <p style="color: var(--text-muted);">Lead System Architect</p>
+
+            <div class="social-links">
+                <a href="https://github.com/kunalkhaire302" target="_blank" class="social-btn github-btn">
+                    <span>GITHUB PROFIlE</span>
+                </a>
+                <a href="https://www.instagram.com/kunal_k0_9/" target="_blank" class="social-btn insta-btn">
+                    <span>INSTAGRAM</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

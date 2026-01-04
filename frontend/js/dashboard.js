@@ -69,8 +69,18 @@ async function loadUserProfile() {
         userData = profile.user;
         statsData = profile.stats;
 
+        statsData = profile.stats;
+
         updateUserDisplay();
         updateStatsDisplay();
+
+        // AI System Notice
+        if (profile.system_notice) {
+            // Delay slightly for effect
+            setTimeout(() => {
+                showToast(profile.system_notice, 'warning');
+            }, 1000);
+        }
     } catch (error) {
         throw error;
     }
@@ -120,6 +130,21 @@ async function loadQuests() {
     try {
         const response = await API.getAvailableQuests();
         questsData = response.quests;
+
+        // AI Recommendation Display
+        const recContainer = document.getElementById('aiRecommendation');
+        if (response.recommendation && recContainer) {
+            recContainer.innerHTML = `
+                <div class="ai-suggestion" style="background: rgba(0, 255, 170, 0.1); border: 1px solid #00ffaa; padding: 1rem; margin-bottom: 2rem; border-radius: 8px;">
+                    <strong style="color: #00ffaa;">🤖 SYSTEM SUGGESTION:</strong> 
+                    <span style="color: #fff;">${response.recommendation.message.replace('System Suggestion:', '')}</span>
+                </div>
+            `;
+            recContainer.classList.remove('hidden');
+        } else if (recContainer) {
+            recContainer.classList.add('hidden');
+        }
+
         displayQuests();
     } catch (error) {
         console.error('Failed to load quests:', error);

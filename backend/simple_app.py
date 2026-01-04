@@ -75,6 +75,8 @@ class MongoJSONEncoder(json.JSONEncoder):
             return str(o)
         return super().default(o)
 
+from system_logic import analyze_weakness, check_behavior_titles, process_streak_login, get_recommended_action, predict_burnout
+
 app.json_encoder = MongoJSONEncoder
 
 
@@ -239,6 +241,9 @@ def login():
             {'$set': {'last_login': current_time.isoformat()}}
         )
         
+        # --- AI MODULE: Consistency System ---
+        streak_count, streak_msg = process_streak_login(user, db)
+        
         response_data = {
             'message': 'Login successful',
             'access_token': token,
@@ -248,7 +253,8 @@ def login():
                 'level': user['level'],
                 'exp': user['exp'],
                 'exp_required': user['exp_required']
-            }
+            },
+            'system_notice': streak_msg # Send streak status
         }
         
         if penalty_applied:
@@ -316,6 +322,15 @@ def get_profile():
         
         # ---------------------------------
         
+        
+        # --- AI MODULE: Weakness Analysis ---
+        system_alert = analyze_weakness(stats)
+        
+        # --- AI MODULE: Burnout Prediction (Phase 3) ---
+        burnout_alert = predict_burnout(stats, []) # History not yet implemented
+        if burnout_alert:
+             system_alert = burnout_alert # Override or append? Let's prioritize Burnout
+        
         return jsonify({
             'user': {
                 'id': str(user['_id']),
@@ -325,7 +340,8 @@ def get_profile():
                 'level': user.get('level', 1),
                 'exp': user['exp'],
                 'exp_required': user['exp_required'],
-                'skill_points': user['skill_points']
+                'skill_points': user['skill_points'],
+                'streak': user.get('streak_count', 0)
             },
             'stats': {
                 'strength': stats['strength'],
@@ -336,7 +352,8 @@ def get_profile():
                 'max_health': stats['max_health'],
                 'max_stamina': stats.get('max_stamina', 100)
             },
-            'titles': [t['title_name'] for t in user_titles]
+            'titles': [t['title_name'] for t in user_titles],
+            'system_notice': system_alert # Send AI Analysis
         }), 200
         
     except Exception as e:
@@ -570,8 +587,14 @@ def get_quests():
             
         quests = list(quests_map.values())
         
+        # --- AI MODULE: Recommendation (Phase 2) ---
+        user_stats = db.stats.find_one({'user_id': user_id})
+        available_quests = quests # Assuming 'quests' is the list of available quests
+        recommendation = get_recommended_action(user_stats, available_quests)
+        
         return jsonify({
-            'quests': quests,
+            'quests': available_quests,
+            'recommendation': recommendation,
             'user_stamina': stats['stamina'],
             'user_level': user['level']
         }), 200
@@ -1420,31 +1443,40 @@ def complete_dungeon():
         
         # Update User
         user = db.users.find_one({'_id': ObjectId(user_id)})
-        new_exp = user['exp'] + exp_reward
-        exp_required = user['exp_required']
+        
+        # --- AI MODULE: Behavior Titles ---
+        # Logic allows earning titles based on time/streak
+        new_titles_earned = check_behavior_titles(user_id, db) 
+        
+        # Check for Level Up
         leveled_up = False
         new_level = user['level']
         
-        if new_exp >= exp_required:
+        # Update user's experience
+        user['exp'] += exp_reward
+
+        if user['exp'] >= user['exp_required']:
             leveled_up = True
             new_level += 1
-            new_exp -= exp_required
-            new_exp_required = (new_level ** 2) * 100
-            new_skill_points = user['skill_points'] + 1
+            user['exp'] -= user['exp_required']
+            user['exp_required'] = int(user['exp_required'] * 1.5) # Example: increase required EXP
+            user['skill_points'] = user.get('skill_points', 0) + 3 # Example: grant skill points
             
+            # Update user level
             db.users.update_one(
-                {'_id': ObjectId(user_id)},
+                {'_id': user['_id']},
                 {'$set': {
                     'level': new_level,
-                    'exp': new_exp,
-                    'exp_required': new_exp_required,
-                    'skill_points': new_skill_points
+                    'exp': user['exp'],
+                    'exp_required': user['exp_required'],
+                    'skill_points': user['skill_points']
                 }}
             )
         else:
+            # Only update experience if no level up
             db.users.update_one(
-                {'_id': ObjectId(user_id)},
-                {'$set': {'exp': new_exp}}
+                {'_id': user['_id']},
+                {'$set': {'exp': user['exp']}}
             )
             
         # Close Dungeon
@@ -1453,6 +1485,9 @@ def complete_dungeon():
             {'$set': {'status': 'completed', 'completed_at': datetime.datetime.utcnow().isoformat()}}
         )
         
+        # Fetch updated stats for the return
+        stats = db.stats.find_one({'user_id': user_id})
+
         return jsonify({
             'message': 'Dungeon Cleared!',
             'exp_gained': exp_reward,

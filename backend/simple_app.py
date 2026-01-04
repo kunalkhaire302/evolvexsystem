@@ -273,6 +273,39 @@ def get_profile():
         
         if not user or not stats:
             return jsonify({'error': 'User not found'}), 404
+
+        # Init default if missing
+        if 'max_stamina' not in stats:
+            stats['max_stamina'] = 100
+            
+        # --- Calculate Dynamic Bonuses ---
+        
+        # 1. Earned Titles Bonuses
+        user_titles = list(db.user_titles.find({'user_id': user_id}))
+        title_ids = [t['title_id'] for t in user_titles]
+        
+        if title_ids:
+            # Fetch definitions to get current bonuses
+            titles_defs = list(db.defined_titles.find({'title_id': {'$in': title_ids}}))
+            for t in titles_defs:
+                bonuses = t.get('stat_bonus', {})
+                for stat, val in bonuses.items():
+                    if stat in stats:
+                        stats[stat] += int(val)
+        
+        # 2. Passive Skills Bonuses
+        user_skills = list(db.user_skills.find({'user_id': user_id}))
+        skill_ids = [s['skill_id'] for s in user_skills]
+        
+        if skill_ids:
+            skills_defs = list(db.skills.find({'skill_id': {'$in': skill_ids}, 'type': 'passive'}))
+            for s in skills_defs:
+                bonuses = s.get('stat_bonus', {})
+                for stat, val in bonuses.items():
+                    if stat in stats:
+                        stats[stat] += int(val)
+        
+        # ---------------------------------
         
         return jsonify({
             'user': {
@@ -280,7 +313,7 @@ def get_profile():
                 'username': user['username'],
                 'email': user['email'],
                 'profile_image': user.get('profile_image', f"https://api.dicebear.com/7.x/avataaars/svg?seed={user['username']}"),
-                'level': user['level'],
+                'level': user.get('level', 1),
                 'exp': user['exp'],
                 'exp_required': user['exp_required'],
                 'skill_points': user['skill_points']
@@ -291,9 +324,10 @@ def get_profile():
                 'intelligence': stats['intelligence'],
                 'stamina': stats['stamina'],
                 'health': stats['health'],
-                'max_health': stats['max_health']
+                'max_health': stats['max_health'],
+                'max_stamina': stats.get('max_stamina', 100)
             },
-            'titles': []
+            'titles': [t['title_name'] for t in user_titles]
         }), 200
         
     except Exception as e:
@@ -795,68 +829,23 @@ def delete_quest(quest_id):
 def get_skills():
     try:
         # Sample skills
-        available_skills = [
-            {
-                'skill_id': 'focus_mode',
-                'name': 'Focus Mode',
-                'type': 'active',
-                'description': 'Increases efficiency and concentration',
-                'max_level': 10,
-                'base_effect': 'Efficiency +5%',
-                'level_bonus': 'Efficiency +5% per level',
-                'unlock_cost': 2
-            },
-            {
-                'skill_id': 'quick_learner',
-                'name': 'Quick Learner',
-                'type': 'passive',
-                'description': 'Gain more EXP from quests',
-                'max_level': 5,
-                'base_effect': 'EXP +10%',
-                'level_bonus': 'EXP +10% per level',
-                'unlock_cost': 3
-            },
-            {
-                'skill_id': 'endurance',
-                'name': 'Endurance',
-                'type': 'passive',
-                'description': 'Reduce stamina cost of quests',
-                'max_level': 10,
-                'base_effect': 'Stamina cost -5%',
-                'level_bonus': 'Stamina cost -5% per level',
-                'unlock_cost': 2
-            },
-            {
-                'skill_id': 'stealth',
-                'name': 'Stealth',
-                'type': 'active',
-                'description': 'Hide your presence from enemies',
-                'max_level': 5,
-                'base_effect': 'Detection range -20%',
-                'level_bonus': 'Range -10% per level',
-                'unlock_cost': 3
-            },
-            {
-                'skill_id': 'sprint',
-                'name': 'Sprint',
-                'type': 'active',
-                'description': 'Move with incredible speed',
-                'max_level': 5,
-                'base_effect': 'Speed +30%',
-                'level_bonus': 'Speed +10% per level',
-                'unlock_cost': 2
-            },
-            {
-                'skill_id': 'iron_body',
-                'name': 'Iron Body',
-                'type': 'passive',
-                'description': 'Harden your skin like iron',
-                'max_level': 10,
-                'base_effect': 'Physical Reduction +10%',
-                'level_bonus': 'Reduction +2% per level',
-                'unlock_cost': 4
-            }
-        ]
+        # Fetch skills from database
+        available_skills = list(db.skills.find({}, {'_id': 0}))
+        
+        # Fallback if DB is empty
+        if not available_skills:
+             available_skills = [
+                {
+                    'skill_id': 'focus_mode',
+                    'name': 'Focus Mode',
+                    'type': 'active',
+                    'description': 'Increases efficiency and concentration',
+                    'max_level': 10,
+                    'base_effect': 'Efficiency +5%',
+                    'level_bonus': 'Efficiency +5% per level',
+                    'unlock_cost': 2
+                }
+             ]
         
         from bson.objectid import ObjectId
         user_id = get_jwt_identity()
@@ -899,28 +888,13 @@ def unlock_skill():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Skill costs
-        skill_costs = {
-            'focus_mode': 2,
-            'quick_learner': 3,
-            'endurance': 2,
-            'stealth': 3,
-            'sprint': 2,
-            'iron_body': 4,
-        }
-        
-        # Skill names
-        skill_names = {
-            'focus_mode': 'Focus Mode',
-            'quick_learner': 'Quick Learner',
-            'endurance': 'Endurance',
-            'stealth': 'Stealth',
-            'sprint': 'Sprint',
-            'iron_body': 'Iron Body',
-        }
-        
-        cost = skill_costs.get(skill_id, 2)
-        skill_name = skill_names.get(skill_id, 'Unknown Skill')
+        # Fetch skill from DB
+        skill_def = db.skills.find_one({'skill_id': skill_id})
+        if not skill_def:
+            return jsonify({'error': 'Skill not found'}), 404
+            
+        cost = skill_def.get('unlock_cost', 2)
+        skill_name = skill_def.get('name', 'Unknown Skill')
         
         # Check skill points
         if user['skill_points'] < cost:
@@ -958,43 +932,20 @@ def get_titles():
     try:
         user_id = get_jwt_identity()
         
-        available_titles = [
-            {
-                'title_id': 'beginner',
-                'name': 'Beginner',
-                'description': 'Just starting the journey',
-                'requirement': 'Start the game',
-                'stat_bonus': {}
-            },
-            {
-                'title_id': 'novice',
-                'name': 'Novice',
-                'description': 'Learning the ropes',
-                'requirement': 'Reach Level 5',
-                'stat_bonus': {'strength': 2, 'agility': 2}
-            },
-            {
-                'title_id': 'apprentice',
-                'name': 'Apprentice',
-                'description': 'Making progress',
-                'requirement': 'Reach Level 10',
-                'stat_bonus': {'intelligence': 5, 'stamina': 5}
-            },
-            {
-                'title_id': 'wolf_slayer',
-                'name': 'Wolf Slayer',
-                'description': 'Defeated the Steel Fanged Wolves',
-                'requirement': 'Unknown',
-                'stat_bonus': {'strength': 3, 'agility': 3}
-            },
-            {
-                'title_id': 'one_above_all',
-                'name': 'One Above All',
-                'description': 'The absolute peak of power',
-                'requirement': 'Reach Level 100',
-                'stat_bonus': {'strength': 10, 'agility': 10, 'intelligence': 10, 'stamina': 10}
-            }
-        ]
+        # Fetch titles from database
+        available_titles = list(db.defined_titles.find({}, {'_id': 0}))
+        
+        # Fallback
+        if not available_titles:
+            available_titles = [
+                {
+                    'title_id': 'beginner',
+                    'name': 'Beginner',
+                    'description': 'Just starting the journey',
+                    'requirement': 'Start the game',
+                    'stat_bonus': {}
+                }
+            ]
         
         # Get earned titles from database
         earned_titles_cursor = db.user_titles.find({'user_id': user_id})

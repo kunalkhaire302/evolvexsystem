@@ -1,0 +1,10 @@
+Starting project at K:\assignment\projects\evolvexsystem\mobile
+Starting Metro Bundler
+Tunnel connected.
+Tunnel ready.
+Waiting on http://localhost:8088
+Logs for your project will appear below.
+Android .\index.ts ΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæ  0.0% (0/1)
+Android Bundled 2919ms index.ts (971 modules)
+ ERROR  Invalid token received: {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NzUzMDY0NSwianRpIjoiOGQxZWNiZWEtMjNmZS00NDg4LTgxNmYtYzcyYTcxZWM3ZDdhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjY5NWE2MDk1ZjFlZGY2MmQzOWYyODIxNyIsIm5iZiI6MTc2NzUzMDY0NSwiY3NyZiI6ImI3N2I4YzM1LTljMjQtNGQ5NS1hODBiLWFmYmJjOTU0MzFmMSIsImV4cCI6MTc2NzYxNzA0NX0.2tz9umv2NwYN5ATBcLacvkLlPJagPZgq1qPhYdWY1PM", "message": "Registration successful", "user": {"id": "695a6095f1edf62d39f28217", "level": 1, "username": "kunalkk"}}
+ ERROR  Invalid token received: {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2NzUzMDc2MiwianRpIjoiOTc0ZmQ2ZWEtMzYyMC00Y2RkLTg1MGQtNWZhN2E1MTUyYjcyIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjY5NWE2MTBhZjFlZGY2MmQzOWYyODIxOSIsIm5iZiI6MTc2NzUzMDc2MiwiY3NyZiI6ImRkZmZlZDlkLWE4Y2UtNGFhMC1hMjdiLWYxYTI1NjQ1NGQyNSIsImV4cCI6MTc2NzYxNzE2Mn0.fL1cY_txgy-KykxlmUbTbNAUZ3nmvY6-c0tFqa_6hLs", "message": "Registration successful", "user": {"id": "695a610af1edf62d39f28219", "level": 1, "username": "om"}}

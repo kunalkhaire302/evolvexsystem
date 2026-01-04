@@ -26,11 +26,7 @@
                 <span class="logo-icon">💠</span>
                 <span class="logo-text">EVOLVEX</span>
             </div>
-            <nav class="nav-links">
-                <button class="nav-btn active" data-tab="dashboard">DASHBOARD</button>
-                <button class="nav-btn" data-tab="quests">QUESTS</button>
-                <button class="nav-btn" data-tab="skills">SKILLS</button>
-            </nav>
+            <!-- Nav moved to Status Window -->
         </div>
 
         <div class="header-right">
@@ -70,6 +66,15 @@
                 <h2>⚡ Status Window</h2>
             </div>
             <div class="panel-body">
+
+                <!-- NAVIGATION MENU (Moved from Header) -->
+                <div class="system-nav-menu"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 1rem;">
+                    <button class="nav-btn btn btn-full active" data-tab="dashboard">DASHBOARD</button>
+                    <button class="nav-btn btn btn-full" data-tab="quests">QUESTS</button>
+                    <button class="nav-btn btn btn-full" data-tab="skills">SKILLS</button>
+                </div>
+
                 <!-- Level and EXP -->
                 <div class="level-section">
                     <div class="level-display">

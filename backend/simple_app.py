@@ -1628,6 +1628,28 @@ def use_item():
         print(f"Use item error: {e}")
         return jsonify({'error': str(e)}), 500
 
+# --- SOCIAL GUILDS (LEADERBOARD) ---
+
+@app.route('/api/leaderboard', methods=['GET'])
+def get_leaderboard():
+    try:
+        # Get top 10 users by Level (desc) then EXP (desc)
+        # Project only necessary fields (username, level, titles)
+        top_hunters = list(db.users.find(
+            {}, 
+            {'_id': 0, 'username': 1, 'level': 1, 'job_class': 1}
+        ).sort([('level', -1), ('exp', -1)]).limit(10))
+        
+        # Add rank dynamically
+        for i, hunter in enumerate(top_hunters):
+            hunter['rank'] = i + 1
+            hunter['job_class'] = hunter.get('job_class', 'E-Rank Hunter')
+            
+        return jsonify(top_hunters), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🎮 THE SYSTEM - Backend Server")

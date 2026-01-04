@@ -203,5 +203,9 @@ const API = {
         apiRequest('/inventory/use', {
             method: 'POST',
             body: JSON.stringify({ item_id: itemId })
-        })
+        }),
+
+    // Social
+    getLeaderboard: () =>
+        apiRequest('/leaderboard')
 };

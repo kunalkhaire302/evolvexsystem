@@ -6,6 +6,14 @@
 
 ---
 
+## 🌐 **Live Demo**
+
+**The project is deployed and live on Render!**
+
+🔗 **Access the System:** [https://evolvexsystem-tcz2.onrender.com/](https://evolvexsystem-tcz2.onrender.com/)
+
+---
+
 ## ⚡ **Key Features**
 
 ### 🎮 **Player Status**

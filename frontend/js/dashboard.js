@@ -693,3 +693,177 @@ function getStatIcon(stat) {
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+/* === DUNGEON SYSTEM LOGIC === */
+let activeDungeon = null;
+let dungeonTimerInterval = null;
+let selectedRank = null;
+
+// Initialize Dungeon Buttons (Call this in initDashboard if possible, or add trigger)
+function initDungeonSystem() {
+    // Add "Gate" button to dashboard if not present
+    const headerRight = document.querySelector('.header-right');
+    if (headerRight && !document.getElementById('dungeonGateBtn')) {
+        const gateBtn = document.createElement('button');
+        gateBtn.id = 'dungeonGateBtn';
+        gateBtn.className = 'btn btn-small';
+        gateBtn.innerHTML = '⛩️ GATE';
+        gateBtn.style.background = 'linear-gradient(45deg, #ff0055, #660022)';
+        gateBtn.style.border = '1px solid #ff99aa';
+
+        gateBtn.addEventListener('click', () => {
+            document.getElementById('dungeonGateModal').classList.add('active');
+        });
+
+        headerRight.appendChild(gateBtn);
+    }
+
+    // Enter Dungeon Button
+    document.getElementById('enterDungeonBtn')?.addEventListener('click', startDungeon);
+
+    // Dungeon Controls
+    document.getElementById('attackBossBtn')?.addEventListener('click', strikeBoss);
+    document.getElementById('fleeDungeonBtn')?.addEventListener('click', fleeDungeon);
+}
+
+// Global scope for select function
+window.selectDungeon = function (rank) {
+    selectedRank = rank;
+    const infoPanel = document.getElementById('selectedDungeonInfo');
+    const details = document.getElementById('dungeonDetails');
+
+    infoPanel.classList.remove('hidden');
+
+    // Update visuals based on rank
+    document.querySelectorAll('.dungeon-rank-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.1)');
+    document.querySelector(`.rank-${rank.toLowerCase()}`).style.borderColor = '#ff0055';
+
+    if (rank === 'E') details.textContent = "E-Rank | 25 Minutes | Noob Friendly";
+    if (rank === 'C') details.textContent = "C-Rank | 60 Minutes | Major Project";
+    if (rank === 'S') details.textContent = "S-Rank | 4 Hours | GOD LEVEL FOCUS";
+};
+
+async function startDungeon() {
+    if (!selectedRank) return;
+
+    try {
+        const response = await API.startDungeon(selectedRank);
+
+        // Setup Active Session
+        activeDungeon = {
+            id: response.dungeon_id,
+            endTime: new Date(response.end_time).getTime(),
+            maxHp: response.boss_hp,
+            currentHp: response.boss_hp
+        };
+
+        // UI Transition
+        document.getElementById('dungeonGateModal').classList.remove('active');
+        document.getElementById('dungeonOverlay').classList.remove('hidden');
+
+        updateBossUI();
+        startTimer();
+
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+function startTimer() {
+    if (dungeonTimerInterval) clearInterval(dungeonTimerInterval);
+
+    dungeonTimerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = activeDungeon.endTime - now;
+
+        if (distance < 0) {
+            // Out of time = Fail (or maybe auto-success if we want lenient?)
+            // Usually dungeon timer end = fail
+            clearInterval(dungeonTimerInterval);
+            document.getElementById('dungeonTimerDisplay').textContent = "BREACHED";
+            showToast("Time expired! Keeping dungeon open for manual finish...", 'warning');
+            return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('dungeonTimerDisplay').textContent =
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    }, 1000);
+}
+
+async function strikeBoss() {
+    if (!activeDungeon) return;
+
+    // Visual hit
+    const btn = document.getElementById('attackBossBtn');
+    btn.classList.add('shake');
+    setTimeout(() => btn.classList.remove('shake'), 200);
+
+    // Logic: standard click = minimal damage, completed task = big damage?
+    // For now, simulate progress: 5% damage per click/task complete
+    const damage = Math.ceil(activeDungeon.maxHp * 0.05);
+
+    try {
+        const res = await API.damageBoss(activeDungeon.id, damage);
+        activeDungeon.currentHp = res.boss_hp;
+        updateBossUI();
+
+        if (activeDungeon.currentHp <= 0) {
+            victory();
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function updateBossUI() {
+    const pct = (activeDungeon.currentHp / activeDungeon.maxHp) * 100;
+    document.getElementById('bossHpFill').style.width = `${pct}%`;
+    document.getElementById('bossHpText').textContent = `${activeDungeon.currentHp} / ${activeDungeon.maxHp}`;
+}
+
+async function victory() {
+    clearInterval(dungeonTimerInterval);
+    try {
+        const res = await API.completeDungeon(activeDungeon.id);
+
+        document.getElementById('dungeonTimerDisplay').style.color = '#00ffaa';
+        document.getElementById('dungeonTimerDisplay').textContent = "DUNGEON CLEARED";
+        showToast(`Victory! +${res.exp_gained} EXP`, 'success');
+
+        setTimeout(async () => {
+            document.getElementById('dungeonOverlay').classList.add('hidden');
+            activeDungeon = null;
+            await loadUserProfile(); // Refresh stats
+            if (res.leveled_up) showLevelUpModal(res.new_level);
+        }, 3000);
+
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+async function fleeDungeon() {
+    if (confirm("Are you sure? You will take damage!")) {
+        try {
+            const res = await API.failDungeon(activeDungeon.id);
+            clearInterval(dungeonTimerInterval);
+            document.getElementById('dungeonOverlay').classList.add('hidden');
+            activeDungeon = null;
+            showToast(`Escaped... took ${res.health_lost} damage.`, 'error');
+            await loadUserProfile(); // Update health
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
+
+// Hook into initialization
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initDungeonSystem, 1000); // Delay slightly to ensure header exists
+});

@@ -267,6 +267,64 @@
     <!-- Notification Toast -->
     <div class="toast" id="toast"></div>
 
+    <!-- Dungeon Modal -->
+    <div class="modal" id="dungeonGateModal">
+        <div class="modal-content dungeon-gate-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="glitch-text" style="color: #ff0055; text-align: center; margin-bottom: 2rem;">DUNGEON GATE</h2>
+
+            <div class="dungeon-ranks">
+                <div class="dungeon-rank-card rank-e" onclick="selectDungeon('E')">
+                    <h3>E-Rank</h3>
+                    <p>Time: 25m</p>
+                    <p>Difficulty: Normal</p>
+                </div>
+                <div class="dungeon-rank-card rank-c" onclick="selectDungeon('C')">
+                    <h3>C-Rank</h3>
+                    <p>Time: 60m</p>
+                    <p>Difficulty: Hard</p>
+                </div>
+                <div class="dungeon-rank-card rank-s" onclick="selectDungeon('S')">
+                    <h3>S-Rank</h3>
+                    <p>Time: 4h</p>
+                    <p>Difficulty: Hell</p>
+                </div>
+            </div>
+
+            <div id="selectedDungeonInfo" class="dungeon-info hidden">
+                <h3>Instance Detected</h3>
+                <p id="dungeonDetails">...</p>
+                <button id="enterDungeonBtn" class="btn btn-danger btn-large pulse-anim">ENTER DUNGEON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Dungeon Overlay -->
+    <div id="dungeonOverlay" class="dungeon-overlay hidden">
+        <div class="dungeon-hud">
+            <div class="dungeon-timer">
+                <span id="dungeonTimerDisplay">00:00:00</span>
+            </div>
+
+            <div class="boss-container">
+                <h2 class="boss-name">INSTANCE BOSS</h2>
+                <div class="boss-hp-bar-container">
+                    <div class="boss-hp-fill" id="bossHpFill"></div>
+                </div>
+                <p id="bossHpText">100/100</p>
+            </div>
+
+            <div class="dungeon-controls">
+                <button id="attackBossBtn" class="btn btn-primary attack-btn">
+                    ⚔️ STRIKE (Complete Subtask)
+                </button>
+                <button id="fleeDungeonBtn" class="btn btn-outline">
+                    🏃 ESCAPE
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
 </body>

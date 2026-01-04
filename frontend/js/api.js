@@ -159,5 +159,49 @@ const API = {
 
     // Progress
     getProgressHistory: (limit = 20) =>
-        apiRequest(`/progress/history?limit=${limit}`)
+        apiRequest(`/progress/history?limit=${limit}`),
+
+    // Dungeons
+    startDungeon: (rank) =>
+        apiRequest('/dungeons/start', {
+            method: 'POST',
+            body: JSON.stringify({ rank })
+        }),
+
+    damageBoss: (dungeonId, damage) =>
+        apiRequest('/dungeons/damage', {
+            method: 'POST',
+            body: JSON.stringify({ dungeon_id: dungeonId, damage })
+        }),
+
+    completeDungeon: (dungeonId) =>
+        apiRequest('/dungeons/complete', {
+            method: 'POST',
+            body: JSON.stringify({ dungeon_id: dungeonId })
+        }),
+
+    failDungeon: (dungeonId) =>
+        apiRequest('/dungeons/fail', {
+            method: 'POST',
+            body: JSON.stringify({ dungeon_id: dungeonId })
+        }),
+
+    // Shop & Inventory
+    getShop: () =>
+        apiRequest('/shop'),
+
+    buyItem: (itemId) =>
+        apiRequest('/shop/buy', {
+            method: 'POST',
+            body: JSON.stringify({ item_id: itemId })
+        }),
+
+    getInventory: () =>
+        apiRequest('/inventory'),
+
+    useItem: (itemId) =>
+        apiRequest('/inventory/use', {
+            method: 'POST',
+            body: JSON.stringify({ item_id: itemId })
+        })
 };

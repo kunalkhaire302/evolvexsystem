@@ -114,6 +114,47 @@
     font-size: 0.95rem;
 }
 
+/* Registration Rules */
+.registration-rules {
+    background: rgba(0, 217, 255, 0.08);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.rules-title {
+    color: var(--primary-cyan);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rules-list li {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.rules-list li::before {
+    content: "•";
+    color: var(--primary-cyan);
+    position: absolute;
+    left: 0;
+}
+
+.rules-list li strong {
+    color: var(--text-primary);
+}
+
 /* Hide Features Grid */
 .features-grid {
     display: none;

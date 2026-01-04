@@ -976,3 +976,45 @@ window.useSkill = async function (skillId) {
         showToast(error.message, 'error');
     }
 };
+
+/* === FEEDBACK SYSTEM === */
+window.toggleFeedbackModal = function () {
+    const modal = document.getElementById('feedbackModal');
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+    } else {
+        modal.classList.add('hidden');
+    }
+}
+
+window.submitFeedback = async function (e) {
+    e.preventDefault();
+
+    const category = document.getElementById('fbCategory').value;
+    const rating = document.getElementById('fbRating').value;
+    const message = document.getElementById('fbMessage').value;
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API.baseUrl}/feedback`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ category, rating, message })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showToast("✅ " + data.message, "success");
+            toggleFeedbackModal();
+            document.getElementById('feedbackForm').reset();
+        } else {
+            showToast("⚠️ " + data.message, "warning");
+        }
+    } catch (error) {
+        showToast("❌ SYSTEM ERROR: REPORT FAILED", "error");
+    }
+}
